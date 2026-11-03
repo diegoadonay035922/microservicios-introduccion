@@ -4,7 +4,15 @@ server:
 spring:
   application:
     name: usuario-service
-    zipkin: http://localhost:9411
+
+# Configuración de Observabilidad y Zipkin para Spring Boot 3.x
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # Envía el 100% de las trazas a Zipkin
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans" # Endpoint correcto de Zipkin en Boot 3
 
 eureka:
   client:

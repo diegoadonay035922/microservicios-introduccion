@@ -4,7 +4,15 @@ server:
 spring:
   application:
     name: carro-service
-    zipkin: http://localhost:9411
+
+# Configuración de Observabilidad y Zipkin para Spring Boot 3.x
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # Envía el 100% de las trazas a Zipkin
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans" # Endpoint correcto de Zipkin en Boot 3
 
 eureka:
   client:
@@ -15,3 +23,33 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+resilience4j.circuitbreaker:
+  instances:
+    carrosCB:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 4
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+    motosCB:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 4
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+    todosCB:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 4
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
